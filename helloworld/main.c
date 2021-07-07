@@ -1,6 +1,5 @@
-#include "starfun.h"
 #include "hello.h"
-#include <stdio.h>
+#include "starfun.h"
 
 int main()
 {
@@ -8,6 +7,4 @@ int main()
 	star2();
 	showhello();
 	return 0;
-
 }
-
