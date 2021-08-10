@@ -1,30 +1,31 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <sys/types.h>
-
-#define BUF_SIZE 1024
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(void)
 {
+    int shmid;
     key_t shmkey;
-
-    shmkey = ftok("./client.cpp", 0);
-
     char *shmptr;
+    shmkey = ftok("./client.c", 0);
     // 创建或打开内存共享区域
-    if ((shmid = shmget(MYKEY, BUF_SIZE, IPC_CREAT)) == -1)
+    shmid = shmget(shmkey, 1024, 0666 | IPC_CREAT);
+    if (shmid == -1)
     {
         printf("shmget error!\n");
         exit(1);
     }
-    if ((shmptr = shmat(shmid, 0, 0)) == (void *)-1)
+
+    //将共享内存映射到当前进程的地址中，之后直接对进程中的地址addr操作就是对共享内存操作
+    shmptr = (char *)shmat(shmid, 0, 0);
+    if (shmptr == (void *)-1)
     {
         printf("shmat error!\n");
         exit(1);
     }
+
     while (1)
     {
         // 把用户的输入存到共享内存区域中
@@ -33,4 +34,3 @@ int main(void)
     }
     exit(0);
 }
-#
