@@ -1,9 +1,9 @@
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/types.h>
 
 int main(void)
 {
@@ -16,7 +16,7 @@ int main(void)
     if (shmid == -1)
     {
         printf("shmget error!\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     //将共享内存映射到当前进程的地址中，之后直接对进程中的地址addr操作就是对共享内存操作
@@ -24,7 +24,7 @@ int main(void)
     if (shmptr == (void *)-1)
     {
         fprintf(stderr, "shmat error!\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     while (1)

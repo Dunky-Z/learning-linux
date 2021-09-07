@@ -16,12 +16,13 @@ union semun
     struct semid_ds *buf;
     unsigned short *array;
 };
+
 void server();
 void client(int shmid, int semid);
 int mySemget(key_t semkey, int nsems, int semflag);
 int myShmget(key_t shmkey, int size, int shmflag);
 void *myShmat(int shmid, const void *shmaddr, int shmflg);
-int safesemctl(int semid, int semnum, int cmd, union semun arg);
+int mySemctl(int semid, int semnum, int cmd, union semun arg);
 int mySemop(int semid, struct sembuf *sops, unsigned nsops);
 void operationP(int signum, int semnum);
 void operationV(int signum, int semnum);

@@ -46,7 +46,7 @@ int mySemop(int semid, struct sembuf *sops, unsigned nsops)
     }
     return ret;
 }
-int safesemctl(int semid, int semnum, int cmd, union semun arg)
+int mySemctl(int semid, int semnum, int cmd, union semun arg)
 {
     int retval;
     if ((retval = semctl(semid, semnum, cmd, arg)) == -1)
@@ -113,9 +113,9 @@ void server()
     printf("Server is running with SEM id : %d\n", semid);
 
     sunion.val = 1;
-    safesemctl(semid, 0, SETVAL, sunion);
+    mySemctl(semid, 0, SETVAL, sunion);
     sunion.val = 0;
-    safesemctl(semid, 0, SETVAL, sunion);
+    mySemctl(semid, 0, SETVAL, sunion);
     //将共享内存映射到当前进程的地址中，之后直接对进程中的地址addr操作就是对共享内存操作
     shmptr = (char *)myShmat(shmid, 0, 0);
 
