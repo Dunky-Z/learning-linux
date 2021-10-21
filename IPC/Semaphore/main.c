@@ -139,7 +139,7 @@ void client(int shmid, int semid)
     while (1)
     {
         printf("Waiting until empty...");
-        fflush(stdout);
+        fflush(stdin);
         operationP(semid, 0);
         printf("done.\n");
         printf("Enter Message: ");

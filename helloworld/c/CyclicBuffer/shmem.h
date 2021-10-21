@@ -10,9 +10,19 @@
 #include <sys/types.h>
 #include "cyclic-buffer.h"
 
-void server(CyCBuf *cycbuff);
-void client(CyCBuf *cycbuff, int shmid);
-int myShmget(key_t shmkey, int size, int shmflag);
-void *myShmat(int shmid, const void *shmaddr, int shmflg);
-void sigdelete(int signum);
-void delete (void);
+#define BUFFERSIZE 1024
+
+typedef struct ShareMemoryState
+{
+    int shmid;
+    key_t shmkey;
+    uint8_t *shmptr;
+    void *shmaddr;
+    int buff_size;
+    int shmflag;
+} SHMS;
+void server(CyCBuf *cycbuff, SHMS *shms);
+void client(CyCBuf *cycbuff, SHMS *shms);
+void shm_init(SHMS *shms);
+int my_shmget(SHMS *shms);
+uint8_t *my_shmat(SHMS *shms);

@@ -1,22 +1,32 @@
 #include "shmem.h"
 
-int myShmget(key_t shmkey, int size, int shmflag)
+SHMS *shms;
+void shm_init(SHMS *shms)
+{
+    shms->shmkey = ftok("./shmem.c", 0);
+    shms->buff_size = BUFFERSIZE;
+    shms->shmflag = IPC_CREAT | 0600;
+    shms->shmid = my_shmget(shms);
+    shms->shmaddr = NULL;
+    shms->shmptr = my_shmat(shms);
+}
+
+int my_shmget(SHMS *shms)
 {
     int ret;
-    ret = shmget(shmkey, size, shmflag);
+    ret = shmget(shms->shmkey, shms->buff_size, shms->shmflag);
     if (ret == -1)
     {
         printf("shmget error!\n");
         exit(EXIT_FAILURE);
     }
-
     return ret;
 }
 
-void *myShmat(int shmid, const void *shmaddr, int shmflag)
+uint8_t *my_shmat(SHMS *shms)
 {
-    char *ret;
-    ret = (char *)shmat(shmid, shmaddr, shmflag);
+    uint8_t *ret;
+    ret = (uint8_t *)shmat(shms->shmid, shms->shmaddr, shms->shmflag);
     if (ret == (void *)-1)
     {
         printf("shmat error!\n");
@@ -25,59 +35,82 @@ void *myShmat(int shmid, const void *shmaddr, int shmflag)
     return ret;
 }
 
-void server(CyCBuf *cycbuff)
+void my_fflush(void)
 {
-    int shmid;
-    key_t shmkey;
-    uint8_t *shmptr;
-    shmkey = ftok("./shmem.c", 0);
-    shmid = myShmget(shmkey, 1024, IPC_CREAT | 0600);
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF)
+        ;
+}
 
+<<<<<<< Updated upstream
     printf("Server is running with SHM id : %d\n", shmid);
     shmptr = myShmat(shmid, 0, 0);
     printf("Enter");
-    cycbuff_init(cycbuff, 1024, shmptr);
+    cycbuff_init(cycbuff, 1024);
+=======
+void server(CyCBuf *cycbuff, SHMS *shms)
+{
+    printf("Server is running with SHM id : %d\n", shms->shmid);
+    cycbuff_init(cycbuff, 10, cycbuff + 1);
+>>>>>>> Stashed changes
 
+    printf("server cycbuff : %p\n", cycbuff);
+    printf("server buf : %p\n", cycbuff->buf);
     while (1)
     {
-        uint8_t str[20];
-        fflush(stdin);
-        printf("Enter Message: ");
-        fgets(str, 19, stdin);
-        for (int i = 0; i < 20; ++i)
+        char ch;
+        while (cycbuff->flag == 1)
         {
-            cycbuff_write(cycbuff, str[i]);
+            printf("Enter Message: ");
+            scanf("%c", &ch);
+            my_fflush();
+            cycbuff_write(cycbuff, ch);
         }
     }
     exit(0);
 }
 
-void client(CyCBuf *cycbuff, int shmid)
+void client(CyCBuf *cycbuff, SHMS *shms)
 {
-
-    uint8_t *shmptr;
-    shmptr = (uint8_t *)myShmat(shmid, 0, 0);
-
-    printf("Server operational: shm id is %d\n", shmid);
-    cycbuff_init(cycbuff, 1024, shmptr);
-
+    printf("Server operational: shm id is %d\n", shms->shmid);
+    cycbuff->buf = cycbuff + 1;
+    printf("client cycbuff : %p\n", cycbuff);
+    printf("client buf : %p\n", cycbuff->buf);
     while (1)
     {
-        cycbuff_read(cycbuff);
-        printf("Message received: %c", cycbuff_read(cycbuff));
+        while (cycbuff->flag == 0)
+        {
+            uint8_t ch = cycbuff_read(cycbuff);
+            printf("Message received: %c \n", ch);
+        }
     }
+}
+
+void dele(void)
+{
+    shmdt(shms->shmaddr);
+    shmctl(shms->shmid, IPC_RMID, NULL);
 }
 
 int main(int argc, char *argv[])
 {
-    CyCBuf *cycbuff = malloc(sizeof(CyCBuf));
+    shms = malloc(sizeof(SHMS));
+    shm_init(shms);
+
+    CyCBuf *cycbuff = (uint8_t *)shms->shmptr;
+    printf("shms : %p\n", shms);
+
+    printf("cycbuff : %p\n", cycbuff);
+
     if (argc < 2)
     {
-        server(cycbuff);
+        server(cycbuff, shms);
     }
     else
     {
-        client(cycbuff, atoi(argv[1]));
+        client(cycbuff, shms);
     }
+    atexit(dele);
+
     return 0;
 }
