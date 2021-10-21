@@ -16,14 +16,10 @@ typedef struct CyclicBuffer
     uint8_t read;
     uint8_t write;
     uint32_t valid_size;
-<<<<<<< Updated upstream
-=======
-    uint32_t total_size;
     uint32_t flag;
->>>>>>> Stashed changes
 } CyCBuf;
 
-void cycbuff_init(CyCBuf *cycbuff, uint32_t size);
+void cycbuff_init(CyCBuf *cycbuff);
 bool cycbuff_isfull(CyCBuf *cycbuff);
 bool cycbuff_isempty(CyCBuf *cycbuff);
 void cycbuff_write(CyCBuf *cycbuff, uint8_t ch);

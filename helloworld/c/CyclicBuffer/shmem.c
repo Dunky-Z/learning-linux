@@ -42,20 +42,10 @@ void my_fflush(void)
         ;
 }
 
-<<<<<<< Updated upstream
-    printf("Server is running with SHM id : %d\n", shmid);
-    shmptr = myShmat(shmid, 0, 0);
-    printf("Enter");
-    cycbuff_init(cycbuff, 1024);
-=======
 void server(CyCBuf *cycbuff, SHMS *shms)
 {
     printf("Server is running with SHM id : %d\n", shms->shmid);
-    cycbuff_init(cycbuff, 10, cycbuff + 1);
->>>>>>> Stashed changes
-
-    printf("server cycbuff : %p\n", cycbuff);
-    printf("server buf : %p\n", cycbuff->buf);
+    cycbuff_init(cycbuff);
     while (1)
     {
         char ch;
@@ -73,8 +63,6 @@ void server(CyCBuf *cycbuff, SHMS *shms)
 void client(CyCBuf *cycbuff, SHMS *shms)
 {
     printf("Server operational: shm id is %d\n", shms->shmid);
-    cycbuff->buf = cycbuff + 1;
-    printf("client cycbuff : %p\n", cycbuff);
     printf("client buf : %p\n", cycbuff->buf);
     while (1)
     {
@@ -97,7 +85,7 @@ int main(int argc, char *argv[])
     shms = malloc(sizeof(SHMS));
     shm_init(shms);
 
-    CyCBuf *cycbuff = (uint8_t *)shms->shmptr;
+    CyCBuf *cycbuff = (CyCBuf *)shms->shmptr;
     printf("shms : %p\n", shms);
 
     printf("cycbuff : %p\n", cycbuff);

@@ -1,12 +1,11 @@
 #include "cyclic-buffer.h"
 
-void cycbuff_init(CyCBuf *cycbuff, uint32_t size)
+void cycbuff_init(CyCBuf *cycbuff)
 {
     memset(cycbuff->buf, 0, CYCBUFFSIZ);
     cycbuff->read = 0;
     cycbuff->write = 0;
     cycbuff->valid_size = 0;
-    cycbuff->total_size = size;
     cycbuff->flag = 1; //can write
 }
 
@@ -32,9 +31,7 @@ void cycbuff_write(CyCBuf *cycbuff, uint8_t ch)
     //     {
     //     }
     // }
-    *(uint8_t *)((uint8_t *)cycbuff->buf + cycbuff->write) = ch;
-    printf("server cycbuff write: %p\n", (uint8_t *)cycbuff->buf + cycbuff->write);
-    printf("server cycbuff flag: %p\n", &(cycbuff->flag));
+    cycbuff->buf[cycbuff->write] = ch;
 
     cycbuff->write++;
     cycbuff->write %= CYCBUFFSIZ;
@@ -52,12 +49,8 @@ uint8_t cycbuff_read(CyCBuf *cycbuff)
     //     }
     // }
     // memcpy(&ch, (uint8_t *)cycbuff->buf, cycbuff->read + 1);
-    printf("client read: %p\n", &(cycbuff->read));
-    printf("client read: %d\n", (cycbuff->read));
-    printf("client cycbuff buf: %p\n", ((uint8_t *)cycbuff->buf));
-    printf("client cycbuff buff + read: %p\n", (uint8_t *)cycbuff->buf + cycbuff->read);
-    printf("client cycbuff flag: %p\n", &(cycbuff->flag));
-    ch = *(uint8_t *)((uint8_t *)cycbuff->buf + cycbuff->read);
+
+    ch = cycbuff->buf[cycbuff->read];
     cycbuff->read++;
     cycbuff->read %= CYCBUFFSIZ;
     cycbuff->valid_size--;
