@@ -48,14 +48,15 @@ void server(CyCBuf *cycbuff, SHMS *shms)
     cycbuff_init(cycbuff);
     while (1)
     {
-        char ch;
-        while (cycbuff->flag == 1)
+        puts("Enter Message: ");
+        uint8_t ch[BUFFERSIZE];
+        fgets(ch, BUFFERSIZE, stdin);
+
+        for (size_t i = 0; ch[i] != '\n' && i < BUFFERSIZE; i++)
         {
-            printf("Enter Message: ");
-            scanf("%c", &ch);
-            my_fflush();
-            cycbuff_write(cycbuff, ch);
+            cycbuff_write(cycbuff, ch[i]);
         }
+        cycbuff_write(cycbuff, '\n');
     }
     exit(0);
 }
@@ -63,13 +64,20 @@ void server(CyCBuf *cycbuff, SHMS *shms)
 void client(CyCBuf *cycbuff, SHMS *shms)
 {
     printf("Server operational: shm id is %d\n", shms->shmid);
-    printf("client buf : %p\n", cycbuff->buf);
     while (1)
     {
-        while (cycbuff->flag == 0)
+        uint8_t ch;
+        puts("Recv Message: ");
+        while (1)
         {
-            uint8_t ch = cycbuff_read(cycbuff);
-            printf("Message received: %c \n", ch);
+            ch = cycbuff_read(cycbuff);
+            if (ch == '\n')
+            {
+                printf("\n");
+                break;
+            }
+            fflush(stdout);
+            printf("%c", ch);
         }
     }
 }
@@ -84,12 +92,7 @@ int main(int argc, char *argv[])
 {
     shms = malloc(sizeof(SHMS));
     shm_init(shms);
-
     CyCBuf *cycbuff = (CyCBuf *)shms->shmptr;
-    printf("shms : %p\n", shms);
-
-    printf("cycbuff : %p\n", cycbuff);
-
     if (argc < 2)
     {
         server(cycbuff, shms);

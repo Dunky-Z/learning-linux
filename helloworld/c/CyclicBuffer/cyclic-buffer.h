@@ -8,7 +8,7 @@ typedef __uint16_t uint16_t;
 typedef __uint32_t uint32_t;
 typedef __uint64_t uint64_t;
 
-#define CYCBUFFSIZ 500
+#define CYCBUFFSIZ 10
 
 typedef struct CyclicBuffer
 {
