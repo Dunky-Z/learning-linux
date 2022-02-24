@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "inc.h": "c",
+        "fun.h": "c",
+        "input.h": "c",
+        "fb_draw.h": "c",
+        "fb.h": "c"
+    }
+}
