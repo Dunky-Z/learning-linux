@@ -1,8 +1,8 @@
 # tool macros
 CC := gcc
-CCFLAGS :=
+CCFLAGS := -O0 -g
 DBGFLAGS := -g
-CCOBJFLAGS := $(CCFLAGS) -c
+CCOBJFLAGS := $(CCFLAGS) -c -O0
 
 # path macros
 BIN_PATH := bin

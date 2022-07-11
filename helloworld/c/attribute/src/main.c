@@ -1,5 +1,6 @@
 #include <stdio.h>
-
+#include <stdlib.h>
+#include "main.h"
 // struct stu {
 //   char sex;
 //   int length;
@@ -43,19 +44,90 @@
 // }
 
 /*==============================================================*/
-#include <stdlib.h>
-#include <string.h>
+// #include <stdlib.h>
+// #include <string.h>
 
-void test_cleanup(char **str) {
-  printf("after cleanup: %s\n", *str);
-  free(*str);
-}
+// void test_cleanup(char **str) {
+//   printf("after cleanup: %s\n", *str);
+//   free(*str);
+// }
 
-int main(int argc, char **argv) {
+// int main(int argc, char **argv) {
 
-  char *str __attribute__((__cleanup__(test_cleanup))) = NULL;
-  str = (char *)malloc((sizeof(char)) * 100);
-  strcpy(str, "test");
-  printf("before cleanup : %s\n", str);
-  return 0;
+//   char *str __attribute__((__cleanup__(test_cleanup))) = NULL;
+//   str = (char *)malloc((sizeof(char)) * 100);
+//   strcpy(str, "test");
+//   printf("before cleanup : %s\n", str);
+//   return 0;
+// }
+
+/*==============================================================*/
+// test typedef
+
+// int main(int argc, char **argv)
+// {
+//     // test_typedef *a = (test_typedef *)malloc(sizeof(test_typedef));
+//     // a->num          = 1;
+//     // printf("test typedef a = %d\n", a->num);
+//     printf("test typedef a");
+
+//     return 0;
+// }
+
+/*==============================================================*/
+
+// int main()
+// {
+//     int i;
+//     // printf("please input your year\n");
+//     scanf("%d", &i);
+//     printf("you are %d old man %s\n", i, (i==26) ? ("true") :("false"));
+//     return 0;
+// }
+
+/*==============================================================*/
+
+
+enum REGION {
+    REGION1,
+    REGION2,
+    REGION3,
+    REGION4,
+    REGION5,
+    REGION6,
+} region;
+
+typedef struct ReginEntry
+{
+    unsigned long long  start;
+    unsigned long long size;
+} ReginEntry;
+
+ReginEntry region_entry[] = {
+    [REGION1]  = {},
+    [REGION2]  = {},
+    [REGION3]  = {},
+    [REGION4]  = {},
+    [REGION5]  = {},
+    [REGION6] = {},
+};
+#define MEM_SIZ_32M  0x2000000
+#define MEM_SIZ_64M  0x4000000
+#define MEM_SIZ_128M 0x8000000
+
+int main()
+{
+    unsigned int *start_addr = 0x80000000;
+
+    region_entry[REGION1].start = start_addr;
+    region_entry[REGION1].size = MEM_SIZ_32M;
+    region_entry[REGION2].start = (start_addr + MEM_SIZ_32M);
+    region_entry[REGION2].size = MEM_SIZ_32M; 
+    region_entry[REGION3].start = start_addr;
+    region_entry[REGION3].size = MEM_SIZ_64M;
+
+    printf("addr = %x\n", start_addr);
+    printf("region1 = %x, size = %x\n", region_entry[REGION1].start,
+           region_entry[REGION1].size);
+    return 0;
 }

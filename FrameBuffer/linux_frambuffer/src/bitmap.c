@@ -26,7 +26,6 @@
 
 bitmap_t *bitmap_create(uint32_t w, uint32_t h)
 {
-    int test
     uint32_t  size = 0;
     bitmap_t *b    = (bitmap_t *)calloc(1, sizeof(bitmap_t));
     return_value_if_fail(b != NULL, NULL);

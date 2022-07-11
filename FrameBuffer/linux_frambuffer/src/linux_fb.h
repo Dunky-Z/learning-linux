@@ -24,14 +24,15 @@
 #ifndef LINUX_FB_H
 #define LINUX_FB_H
 
-typedef struct _fb_info_t {
-  int fd;
-  uint8_t* data;
+typedef struct _fb_info_t
+{
+    uint8_t *data;
+    int      fd;
 
-  uint32_t w;
-  uint32_t h;
-  uint32_t bpp;
-  uint32_t line_length;
+    uint32_t w;
+    uint32_t h;
+    uint32_t bpp;
+    uint32_t line_length;
 } fb_info_t;
 
 fb_info_t* linux_fb_open(const char* filename);

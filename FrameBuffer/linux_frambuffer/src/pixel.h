@@ -25,6 +25,7 @@
 #include "types_def.h"
 
 #pragma pack(push, 1)
+
 typedef struct _pixel_rgb565_t
 {
     uint16_t r : 5;

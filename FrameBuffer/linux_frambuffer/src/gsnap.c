@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     filename   = argv[1];
     fbfilename = argv[2];
-    ass fb     = linux_fb_open(fbfilename);
+    fb         = linux_fb_open(fbfilename);
     if (fb != NULL)
     {
         bitmap_t *b = bitmap_create(fb->w, fb->h);

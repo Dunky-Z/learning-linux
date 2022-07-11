@@ -1,0 +1,1 @@
+typedef struct test_typedef test_a;
