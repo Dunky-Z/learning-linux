@@ -5,6 +5,11 @@
 #ifndef CACHELAB_TOOLS_H
 #define CACHELAB_TOOLS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <time.h>
+
 #define MAX_TRANS_FUNCS 100
 
 typedef struct trans_func{

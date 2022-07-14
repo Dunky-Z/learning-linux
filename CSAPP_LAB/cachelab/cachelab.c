@@ -1,11 +1,8 @@
 /*
  * cachelab.c - Cache Lab helper functions
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+
 #include "cachelab.h"
-#include <time.h>
 
 trans_func_t func_list[MAX_TRANS_FUNCS];
 int func_counter = 0; 
