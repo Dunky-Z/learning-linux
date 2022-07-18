@@ -58,24 +58,12 @@ void initialize_cache()
     }
 }
 
-/**
- *
- * @param nodeToDel CacheLine to be deleted
- * @param curLru  Current Cache
- */
-void deleteElement(CacheLine *nodeToDel, Cache *curLru)
-{
-    nodeToDel->next->prev = nodeToDel->prev;
-    nodeToDel->prev->next = nodeToDel->next;
-    *(curLru->size) = *(curLru->size) - 1;
-}
-
 /*!
  * @breif Add a new CacheLine to the Cache first line
  * @param nodeToDel CacheLine to be deleted
  * @param curLru  Current Cache
  */
-void addFirst(CacheLine *node, Cache *curLru)
+void insert_first_line(CacheLine *node, Cache *curLru)
 {
     node->next = curLru->head->next;
     node->prev = curLru->head;
@@ -118,20 +106,20 @@ void update(unsigned address)
     if (found) {
         hits++;
         evict(cur, &curLru);
-        addFirst(cur, &curLru);
+        insert_first_line(cur, &curLru);
         printf("> hit!, set: %d \n", targetSet);
     } else {
         CacheLine *newNode = malloc(sizeof(CacheLine));
         newNode->tag = targetTag;
         if (*(curLru.size) == E) { // 如果缓存已满，则删除最后一个缓存行
             evict(curLru.tail->prev, &curLru);
-            addFirst(newNode, &curLru);
+            insert_first_line(newNode, &curLru);
             evictions++;
             misses++;
             printf("> evic && miss set:%d\n", targetSet);
         } else {
             misses++;
-            addFirst(newNode, &curLru);
+            insert_first_line(newNode, &curLru);
             printf("> miss %d\n", targetSet);
         }
     }
