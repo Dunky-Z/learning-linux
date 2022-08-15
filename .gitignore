@@ -54,3 +54,4 @@ dkms.conf
 .csim_results
 *.tmp
 .vscode/*
+**/bin/*
