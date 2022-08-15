@@ -117,17 +117,25 @@ ReginEntry region_entry[] = {
 
 int main()
 {
-    unsigned int *start_addr = 0x80000000;
+    // unsigned int *start_addr = 0x80000000;
 
-    region_entry[REGION1].start = start_addr;
-    region_entry[REGION1].size = MEM_SIZ_32M;
-    region_entry[REGION2].start = (start_addr + MEM_SIZ_32M);
-    region_entry[REGION2].size = MEM_SIZ_32M; 
-    region_entry[REGION3].start = start_addr;
-    region_entry[REGION3].size = MEM_SIZ_64M;
+    // region_entry[REGION1].start = start_addr;
+    // region_entry[REGION1].size = MEM_SIZ_32M;
+    // region_entry[REGION2].start = (start_addr + MEM_SIZ_32M);
+    // region_entry[REGION2].size = MEM_SIZ_32M;
+    // region_entry[REGION3].start = start_addr;
+    // region_entry[REGION3].size = MEM_SIZ_64M;
 
-    printf("addr = %x\n", start_addr);
-    printf("region1 = %x, size = %x\n", region_entry[REGION1].start,
-           region_entry[REGION1].size);
+    // printf("addr = %x\n", start_addr);
+    // printf("region1 = %x, size = %x\n", region_entry[REGION1].start,
+    //        region_entry[REGION1].size);
+    unsigned long long i64_addr_64 = 0x1234567890abcdef;
+    int i32_addr_32 = 0x92345789;
+    unsigned long long i64_addr_32 = 0x2234567890;
+
+    printf("0x%x\r\n", i32_addr_32);
+    printf("0x%llx\r\n", i64_addr_64);
+    printf("0x%lx\r\n", i64_addr_32);
+    printf("0x%llx, 0x%llx,0x%x\r\n", i64_addr_64, i64_addr_32, i32_addr_32);
     return 0;
 }
